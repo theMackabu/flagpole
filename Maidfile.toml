@@ -1,4 +1,4 @@
-import = ["packages/versioning/Maidfile.toml"]
+import = ["packages/versioning/Build", "packages/database/Build"]
 
 [project]
 name = "flagpole"

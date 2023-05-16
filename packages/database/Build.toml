@@ -1,0 +1,5 @@
+[tasks.build_database]
+path = "packages/database"
+info = "build database binary"
+cache = { path = "packages/database/src", target = "flagpole_db" }
+script = ["cargo build --release", "mv target/release/flagpole_db %{dir.current}/flagpole_db"]
