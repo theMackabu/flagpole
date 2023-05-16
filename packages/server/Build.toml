@@ -1,0 +1,5 @@
+[tasks.build_server]
+path = "packages/server"
+info = "build server binary"
+cache = { path = "packages/database/src", target = "bin/services/server" }
+script = ["go build .", "mv flagpole_server %{dir.current}/bin/services/server", "echo built server (main.go)"]

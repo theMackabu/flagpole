@@ -2,6 +2,7 @@ use anyhow::Error;
 use colored::Colorize;
 use inquire::{required, Text};
 use macros_rs::{crashln, str};
+use regex::Regex;
 use serde::Deserialize;
 use std::io::prelude::*;
 use std::process::Command;
@@ -12,11 +13,13 @@ use toml_edit::{value, Document};
 const MAIDFILE: &str = "Maidfile.toml";
 const VERSION_TOML: &str = "packages/versioning/Cargo.toml";
 const DATABASE_TOML: &str = "packages/database/Cargo.toml";
+const GOLANG_CONST: &str = "packages/server/version.go";
 
 struct Files {
     maidfile: String,
     version_system: String,
     database: String,
+    server: String,
 }
 
 #[derive(Deserialize)]
@@ -51,6 +54,10 @@ fn read() -> Files {
             Ok(file) => file,
             Err(err) => crashln!("{err}"),
         },
+        server: match fs::read_to_string(GOLANG_CONST) {
+            Ok(file) => file,
+            Err(err) => crashln!("{err}"),
+        },
     };
 }
 
@@ -70,6 +77,9 @@ fn write(path: &str, contents: String) {
 
 fn set(version: String) {
     println!("\n{} {} {}", "Updated versions to".white(), format!("v{version}").bright_green(), "in:".white());
+
+    let regex = Regex::new(r#"const version = "([0-9]{1,4}(\.[0-9a-z]{1,6}){1,5})""#).unwrap();
+    let server = regex.replace_all(str!(read().server.clone()), format!("const version = \"{}\"", version));
 
     let mut maidfile = match read().maidfile.parse::<Document>() {
         Ok(doc) => doc,
@@ -93,6 +103,7 @@ fn set(version: String) {
     write(MAIDFILE, maidfile.to_string());
     write(VERSION_TOML, version_system.to_string());
     write(DATABASE_TOML, database.to_string());
+    write(GOLANG_CONST, server.to_string());
 }
 
 fn main() {

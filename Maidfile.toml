@@ -1,10 +1,16 @@
-import = ["packages/versioning/Build", "packages/database/Build", "bin/Scripts"]
+import = [
+   "packages/versioning/Build", 
+   "packages/database/Build", 
+   "packages/server/Build",
+   "bin/scripts",
+]
 
 [project]
 name = "flagpole"
 version = "0.1.0"
 
 [tasks]
-clean = { info = "remove binary", script = ["rm flagpole", "maid butler clean"] }
-start = { info = "run binary", script = "bin/flagpole" }
+start = { info = "run binary", script = "flagpole" }
 version = { script = "./version_system", info = "set package version" }
+build = { info = "create all binaries", script = ["maid build_server -q", "maid build_database -q", "maid build_versioning -q"] }
+clean = { info = "remove binary", script = ["rm version_system", "rm flagpole", "maid butler clean", "maid clean_services -q"] }
