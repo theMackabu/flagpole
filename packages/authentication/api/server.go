@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -22,7 +21,7 @@ func (server *HttpServer) CreateRouter() {
 }
 
 func (server *HttpServer) StartServer(address string, origins string) {
-	fmt.Println("server started: ", address)
+	log.Println("server started:", address)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   strings.Split(origins, ","),

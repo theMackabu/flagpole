@@ -12,8 +12,8 @@ type Migrations struct{
 func (migr Migrations) MakeMigrations() {
 	connection, conError:= migr.DB.GetConnection()
 	if conError != nil{
-		log.Println("Connection Error")
+		log.Println("connection error")
 	}
-	log.Println("Migrating")
+	log.Println("connected to database")
 	connection.AutoMigrate(&models.User{})
 }

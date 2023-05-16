@@ -9,7 +9,6 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
-	github.com/joho/godotenv v1.5.1
 	github.com/rs/cors v1.9.0
 	github.com/spf13/cobra v1.7.0
 	gorm.io/driver/sqlite v1.5.0
