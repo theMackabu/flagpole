@@ -11,10 +11,12 @@ use toml_edit::{value, Document};
 
 const MAIDFILE: &str = "Maidfile.toml";
 const VERSION_TOML: &str = "packages/versioning/Cargo.toml";
+const DATABASE_TOML: &str = "packages/database/Cargo.toml";
 
 struct Files {
     maidfile: String,
     version_system: String,
+    database: String,
 }
 
 #[derive(Deserialize)]
@@ -42,6 +44,10 @@ fn read() -> Files {
             Err(err) => crashln!("{err}"),
         },
         version_system: match fs::read_to_string(VERSION_TOML) {
+            Ok(file) => file,
+            Err(err) => crashln!("{err}"),
+        },
+        database: match fs::read_to_string(DATABASE_TOML) {
             Ok(file) => file,
             Err(err) => crashln!("{err}"),
         },
@@ -75,11 +81,18 @@ fn set(version: String) {
         Err(err) => crashln!("{err}"),
     };
 
+    let mut database = match read().database.parse::<Document>() {
+        Ok(doc) => doc,
+        Err(err) => crashln!("{err}"),
+    };
+
     maidfile["project"]["version"] = value(version.clone());
     version_system["package"]["version"] = value(version.clone());
+    database["package"]["version"] = value(version.clone());
 
     write(MAIDFILE, maidfile.to_string());
     write(VERSION_TOML, version_system.to_string());
+    write(DATABASE_TOML, database.to_string());
 }
 
 fn main() {
