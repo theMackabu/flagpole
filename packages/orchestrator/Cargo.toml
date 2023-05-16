@@ -1,0 +1,8 @@
+# run all the microservices together with fancy ui, ran by the manager
+
+[package]
+name = "flagpole_orchestrator"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]

@@ -1,5 +1,7 @@
+# http db
+
 [package]
-name = "flagpole_client"
+name = "flagpole_db"
 version = "0.1.0"
 edition = "2021"
 

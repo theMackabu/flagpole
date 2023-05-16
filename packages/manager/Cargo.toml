@@ -1,5 +1,7 @@
+# cli
+
 [package]
-name = "flagpole"
+name = "flagpole_manager"
 version = "0.1.0"
 edition = "2021"
 
