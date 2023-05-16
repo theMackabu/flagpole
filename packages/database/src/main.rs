@@ -30,8 +30,8 @@ fn err_not_found() -> HttpResponse {
     HttpResponse::build(StatusCode::NOT_FOUND).content_type("application/json").body(
         json!({
           "error": {
-             "code" : -404,
-              "message": "not found"}})
+             "code": 404,
+             "message": "not found"}})
         .to_string(),
     )
 }
@@ -40,8 +40,8 @@ fn err_500() -> HttpResponse {
     HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).content_type("application/json").body(
         json!({
           "error": {
-             "code" : -500,
-              "message": "internal server error"}})
+             "code": 500,
+             "message": "internal server error"}})
         .to_string(),
     )
 }
@@ -54,16 +54,14 @@ fn ok_json(jval: serde_json::Value) -> HttpResponse {
     HttpResponse::Ok().content_type("application/json").body(jval.to_string())
 }
 
-#[get("/")]
+#[get("/health")]
 async fn req_index(m_state: web::Data<Arc<Mutex<ServerState>>>) -> HttpResponse {
     let state = m_state.lock().unwrap();
 
     ok_json(json!({
-        "name": "database",
+        "healthy": true,
         "version": env!("CARGO_PKG_VERSION"),
-        "databases": [
-            { "name": state.name }
-        ]
+        "database": state.name
     }))
 }
 
@@ -76,7 +74,7 @@ async fn req_delete(m_state: web::Data<Arc<Mutex<ServerState>>>, path: web::Path
 
     match state.db.remove(path.1.clone()) {
         Ok(optval) => match optval {
-            Some(_val) => ok_json(json!({"result": true})),
+            Some(_val) => ok_json(json!({"deleted": true})),
             None => err_not_found(),
         },
         Err(_e) => err_500(),
@@ -107,7 +105,7 @@ async fn req_put(m_state: web::Data<Arc<Mutex<ServerState>>>, (path, body): (web
     }
 
     match state.db.insert(path.1.as_str(), body.to_vec()) {
-        Ok(_optval) => ok_json(json!({"result": true})),
+        Ok(_optval) => ok_json(json!({"success": true})),
         Err(_e) => err_500(),
     }
 }
@@ -149,7 +147,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(TracingLogger::default())
             .service(req_index)
             .service(
-                web::resource("/api/{db}/{key}")
+                web::resource("/{db}/{key}")
                     .route(web::get().to(req_get))
                     .route(web::put().to(req_put))
                     .route(web::delete().to(req_delete)),
