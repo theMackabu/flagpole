@@ -1,0 +1,12 @@
+[project]
+name = "flagpole"
+version = "0.1.0"
+
+[tasks]
+clean = { info = "remove binary", script = ["rm flagpole", "maid butler clean"] }
+start = { info = "run binary", script = "rm maid" }
+
+[tasks.build]
+info = "build binary"
+cache = { path = "src", target = "flagpole" }
+script = ["cargo build --release", "mv target/release/flagpole flagpole"]

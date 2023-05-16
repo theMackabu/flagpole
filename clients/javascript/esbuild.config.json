@@ -1,0 +1,9 @@
+{
+	"entry": "src/index.ts",
+	"format": "cjs",
+	"target": "es2016",
+	"outfile": "build/index.dist.js",
+	"minify": true,
+	"bundle": true,
+	"sourcemap": true
+}
