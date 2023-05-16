@@ -1,7 +1,7 @@
 import = [
+   "packages/authentication/Build",
    "packages/versioning/Build", 
    "packages/database/Build", 
-   "packages/server/Build",
    "bin/scripts",
 ]
 

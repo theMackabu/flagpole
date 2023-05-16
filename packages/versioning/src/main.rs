@@ -13,7 +13,7 @@ use toml_edit::{value, Document};
 const MAIDFILE: &str = "Maidfile.toml";
 const VERSION_TOML: &str = "packages/versioning/Cargo.toml";
 const DATABASE_TOML: &str = "packages/database/Cargo.toml";
-const GOLANG_CONST: &str = "packages/server/version.go";
+const GOLANG_CONST: &str = "packages/authentication/config/version.go";
 
 struct Files {
     maidfile: String,

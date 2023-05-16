@@ -1,5 +1,0 @@
-[tasks.build_server]
-path = "packages/server"
-info = "build server binary"
-cache = { path = "packages/server", target = "bin/services/server" }
-script = ["go mod tidy" ,"go build .", "mv flagpole_server %{dir.current}/bin/services/server", "echo built server (main.go)"]

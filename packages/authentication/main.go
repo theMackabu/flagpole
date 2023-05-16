@@ -1,9 +1,10 @@
 package main
 
 import (
-   "fmt"
+   "flagpole_auth/cmd"
 )
 
+
 func main() {
-   fmt.Println("hello world!!")
+   cmd.Execute()
 }
