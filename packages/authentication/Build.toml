@@ -1,4 +1,4 @@
-[tasks.build_server]
+[tasks.build_auth]
 path = "packages/authentication"
 info = "build server binary"
 cache = { path = "packages/authentication", target = "bin/services/auth" }

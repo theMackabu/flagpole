@@ -8,18 +8,17 @@ import { logger } from 'hono/logger';
 
 const app = new Hono();
 const args = parse(process.argv.slice(2));
-const base = 'http://127.0.0.1:5000';
 
 const urls = {
-	login: `${base}/_/login`,
-	create: `${base}/_/signup`,
-	refresh: `${base}/_/refresh`,
+	login: `http://${args.auth}/_/login`,
+	create: `http://${args.auth}/_/signup`,
+	refresh: `http://${args.auth}/_/refresh`,
 };
 
 const config = (body) => ({ json: body, throwHttpErrors: false });
 
 app.use('*', logger());
-app.use('/api/*', jwt({ secret: '2iuhygw3efdrtgyuewi2okedmf' }));
+app.use('/api/*', jwt({ secret: args.secret }));
 
 app.post('/auth/login', async (c) => {
 	const body = await c.req.json();
@@ -61,8 +60,8 @@ app.post('/api/user/create', async (c) => {
 	return c.json(response);
 });
 
-log.info('started on port 6000');
+log.info(`started on port ${args.port}`);
 serve({
 	fetch: app.fetch,
-	port: 6000,
+	port: args.port,
 });

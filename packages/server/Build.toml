@@ -1,0 +1,5 @@
+[tasks.build_server]
+path = "packages/server"
+info = "build & run server"
+cache = { path = "packages/server/src", target = "bin/services/server.js" }
+script = ["yarn ci", "mv build/index.dist.js %{dir.current}/bin/services/server.js", "yarn clean"]

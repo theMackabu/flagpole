@@ -7,6 +7,7 @@
 		"lint": "tsc --noEmit",
 		"clean": "rm -rf build/*",
 		"start": "node build/index.dist.js",
+		"ci": "yarn clean && esbuild $(esbuild-config)",
 		"watch": "nodemon --watch 'src/**/*.ts' --exec 'tsx' src/index.ts",
 		"build": "yarn clean && yarn lint && esbuild $(esbuild-config)"
 	},
