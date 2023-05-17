@@ -42,34 +42,66 @@ func (h *Handlers) Login(w http.ResponseWriter, request *http.Request) {
 
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
+				h.user = nil
+
 				return
 			}
 
 			h.logResponse.Token = newToken
 			w.WriteHeader(http.StatusOK)
 			json.NewEncoder(w).Encode(&h.logResponse)
+			h.user = nil
+
 			return
 		}
 
 		w.WriteHeader(http.StatusUnauthorized)
 		json_body.Set("error", "invalid username or password")
 		json.NewEncoder(w).Encode(json_body)
+		h.user = nil
 
 		return
 	}
-	
+
 	w.WriteHeader(http.StatusUnauthorized)
 	json_body.Set("error", "invalid username or password")
 	json.NewEncoder(w).Encode(json_body)
-
+	h.user = nil
 }
 
 func (h *Handlers) Refresh(w http.ResponseWriter, request *http.Request) {
-	data := simplejson.New()
-	data.Set("valid", true)
-	data.Set("refresh", "continue")
+	reqBody, requestError := io.ReadAll(request.Body)
+	json_body := simplejson.New()
 
-	json.NewEncoder(w).Encode(data)
+	if requestError != nil {
+		log.Println(requestError.Error())
+	}
+
+	json.Unmarshal(reqBody, &h.user)
+	searchedUser := data.RepoAccessInterface.Find(h.user.Username)
+
+	if searchedUser.Username != "" {
+		newToken, err := h.wrapper.GenerateJWT(h.user.Username, 5)
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			h.user = nil
+
+			return
+		}
+
+		h.logResponse.Token = newToken
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(&h.logResponse)
+		h.user = nil
+
+		return
+	}
+
+	w.WriteHeader(http.StatusUnauthorized)
+	json_body.Set("error", "invalid username or token")
+	json.NewEncoder(w).Encode(json_body)
+	h.user = nil
 }
 
 func (h *Handlers) Signup(w http.ResponseWriter, request *http.Request) {
@@ -81,22 +113,26 @@ func (h *Handlers) Signup(w http.ResponseWriter, request *http.Request) {
 
 	if requestError != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		h.user = nil
+
 		return
 	}
 
 	_, createErr := data.RepoAccessInterface.Create(h.user)
-	
+
 	if createErr != nil {
 		h.sigResponse.Created = false
 		h.sigResponse.Message = "user already exists"
-		
+
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(h.sigResponse)
+		h.user = nil
 	} else {
 		h.sigResponse.Created = true
 		h.sigResponse.Message = "created new user"
-		
+
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(h.sigResponse)
+		h.user = nil
 	}
 }

@@ -32,7 +32,7 @@ func (server *HttpServer) StartServer(address string, origins string) {
 }
 
 func (server *HttpServer) SetRoutes() {
-	server.Router.HandleFunc("/api/login", transport.SetJSONResponse(server.handlers.Login)).Methods("POST")
-	server.Router.HandleFunc("/api/signup", transport.SetJSONResponse(transport.ValidateRequestBody(server.handlers.Signup))).Methods("POST")
-	server.Router.HandleFunc("/api/refresh", transport.SetJSONResponse(transport.IsAuthorized(server.handlers.Refresh))).Methods("GET")
+	server.Router.HandleFunc("/_/login", transport.SetJSONResponse(server.handlers.Login)).Methods("POST")
+	server.Router.HandleFunc("/_/signup", transport.SetJSONResponse(transport.ValidateRequestBody(server.handlers.Signup))).Methods("POST")
+	server.Router.HandleFunc("/_/refresh", transport.SetJSONResponse(transport.IsAuthorized(server.handlers.Refresh))).Methods("POST")
 }
