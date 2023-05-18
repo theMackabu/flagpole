@@ -8,6 +8,7 @@ import (
 	"flagpole_auth/api/users/transport"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
+	"github.com/gildas/go-logger"
 )
 
 type HttpServer struct {
@@ -22,13 +23,14 @@ func (server *HttpServer) CreateRouter() {
 
 func (server *HttpServer) StartServer(address string, origins string) {
 	log.Println("server started:", address)
+	json := logger.Create("authentication")
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   strings.Split(origins, ","),
 		AllowCredentials: true,
 	})
 
-	log.Fatal(http.ListenAndServe(address, c.Handler(transport.Logger(server.Router))))
+	log.Fatal(http.ListenAndServe(address, c.Handler(json.HttpHandler()(transport.Logger(server.Router)))))
 }
 
 func (server *HttpServer) SetRoutes() {

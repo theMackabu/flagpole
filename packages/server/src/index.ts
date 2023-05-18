@@ -4,31 +4,18 @@ import { log, logger } from './logger';
 import got from 'got';
 import { jwt } from 'hono/jwt';
 import { parse } from './cli';
+import { version } from '../package.json';
 
 class Cache extends Map {
 	constructor(array) {
 		super(array);
 	}
-	delete(key) {
-		return super.delete(this.preProcess(key));
-	}
-	get(key) {
-		return super.get(this.preProcess(key));
-	}
-	has(key) {
-		return super.has(this.preProcess(key));
-	}
-	set(key, value) {
-		return super.set(this.preProcess(key), value);
-	}
 
-	preProcess(key) {
-		if (typeof key === 'object') {
-			return JSON.stringify(key);
-		} else {
-			return key;
-		}
-	}
+	delete = (key) => super.delete(this.preProcess(key));
+	get = (key) => super.get(this.preProcess(key));
+	has = (key) => super.has(this.preProcess(key));
+	set = (key, value) => super.set(this.preProcess(key), value);
+	preProcess = (key) => (typeof key === 'object' ? JSON.stringify(key) : key);
 }
 
 const app = new Hono();
@@ -69,7 +56,7 @@ const throttle = (callback, delay) => {
 const fetch = throttle(async (data) => {
 	const { address, builder } = data;
 	const response = await got
-		.get(address, { throwHttpErrors: false })
+		.get(address, { ...agent, throwHttpErrors: false })
 		.json()
 		.catch((err) => log.error(err));
 
@@ -78,7 +65,7 @@ const fetch = throttle(async (data) => {
 
 const startServer = async () => {
 	const data = await got
-		.get(urls.list)
+		.get(urls.list, agent)
 		.json()
 		.catch((err) => log.error(err));
 	const items = Object.keys(data.items);
@@ -109,7 +96,17 @@ const urls = {
 	list: `http://${args.db_url}/list`,
 };
 
-const config = (body) => ({ json: body, throwHttpErrors: false });
+const agent = {
+	headers: {
+		'user-agent': `flagpole_server/v${version}`,
+	},
+};
+
+const config = (body) => ({
+	json: body,
+	throwHttpErrors: false,
+	...agent,
+});
 
 app.use('*', logger());
 app.use('/api/*', jwt({ secret: args.secret }));

@@ -1,7 +1,6 @@
 package transport
 
 import (
-	"os"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -14,7 +13,7 @@ import (
 	jwt "flagpole_auth/api/auth"
 	"github.com/bitly/go-simplejson"
 	"flagpole_auth/api/users/models"
-	"github.com/gorilla/handlers"
+	"github.com/gildas/go-logger"
 )
 
 func SetJSONResponse(handler http.HandlerFunc) http.HandlerFunc {
@@ -94,5 +93,8 @@ func IsAuthorized(handler http.HandlerFunc) http.HandlerFunc {
 }
 
 func Logger(next http.Handler) http.Handler {
-	 return handlers.LoggingHandler(os.Stdout, next)
+	 return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		logger.Must(logger.FromContext(r.Context()))
+		next.ServeHTTP(w, r)
+	 })
 }
