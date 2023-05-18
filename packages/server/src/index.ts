@@ -71,8 +71,8 @@ const startServer = async () => {
 	const items = Object.entries(data.items);
 
 	items.forEach(([key, value]) => cache.set(key, JSON.parse(value)));
-	log.info(`fetched inital cache, ${items.length <= 1 ? items.length + ' item' : items.length + ' items'}`);
-	log.info(`started on port ${args.port}`);
+	log.info({ items: items.length }, 'fetched inital cache');
+	log.info({ port: args.port }, 'server started');
 
 	serve({
 		fetch: app.fetch,

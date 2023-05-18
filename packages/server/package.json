@@ -13,6 +13,8 @@
 	},
 	"dependencies": {
 		"@hono/node-server": "^0.4.0",
+		"@types/bunyan": "^1.8.8",
+		"bunyan": "^1.8.15",
 		"got": "^12.6.0",
 		"hono": "^3.1.8",
 		"nanoid": "^4.0.2"

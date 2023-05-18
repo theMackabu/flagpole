@@ -1,11 +1,6 @@
-const log = {
-	info: (object: any) => console.log(JSON.stringify({ level: 30, name: 'server', time: new Date(), message: object })),
-	error: (object: any) => console.error(JSON.stringify({ level: 50, name: 'server', time: new Date(), message: object })),
-	server: (method: string, path: string, status?: number, elapsed?: string) => {
-		console.log(JSON.stringify({ level: 'info', name: 'server', time: new Date(), method, path: getPathFromURL(path), status, elapsed }));
-	},
-};
+import bunyan from 'bunyan';
 
+const log = bunyan.createLogger({ name: 'server' });
 const time = (start: number) => (delta = Date.now() - start);
 
 const getPathFromURL = (url: string, strict: boolean = true): string => {
@@ -22,12 +17,12 @@ const getPathFromURL = (url: string, strict: boolean = true): string => {
 const logger = () => {
 	return async (c, next) => {
 		const { method } = c.req;
-		log.server(method, c.req.url);
+		log.info({ method, status: c.res.status }, '[HTTP REQUEST - START]');
 
 		const start = Date.now();
 		await next();
 
-		log.server(method, c.req.url, c.res.status, time(start));
+		log.info({ method, path: getPathFromURL(c.req.url), status: c.res.status, time: time(start) }, '[HTTP REQUEST - END]');
 	};
 };
 

@@ -3,9 +3,11 @@ database = { path = "bin/services", script = "./database --port 3000 --address l
 server = { path = "bin/services", script = "node server.js --port 6000 --auth 127.0.0.1:5000 --db_url localhost:3000 --database db --secret 2iuhygw3efdrtgyuewi2okedmf" }
 auth = { path = "bin/services", script = "./auth start --address localhost:5000 --cors localhost:6000 --db_name users.db --secret 2iuhygw3efdrtgyuewi2okedmf" }
 
-# check if started using stdout args in orchestrator to run next task
 clean_services = { path = "bin", script = ["rm -rf services", "mkdir services"] }
-start_services = { script = "parallel --delay 1s --line-buffer ::: 'maid database' 'maid auth' 'maid server'" }
+start_services = { script = "bash -c 'maid start_json -q | bunyan'" }
+
+# check if started using stdout args in orchestrator to run next task
+start_json = { hide = true, script = "parallel --delay 1s --line-buffer ::: 'maid database -q' 'maid auth -q' 'maid server -q'" }
 
 # manage this from one config file
 
