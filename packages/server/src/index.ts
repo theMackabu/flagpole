@@ -1,10 +1,9 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
-import { log } from './logger';
+import { log, logger } from './logger';
 import got from 'got';
 import { jwt } from 'hono/jwt';
 import { parse } from './cli';
-import { logger } from 'hono/logger';
 
 class Cache extends Map {
 	constructor(array) {
@@ -114,7 +113,6 @@ const config = (body) => ({ json: body, throwHttpErrors: false });
 
 app.use('*', logger());
 app.use('/api/*', jwt({ secret: args.secret }));
-
 app.notFound((c) => c.json(notFound, 404));
 
 app.post('/auth/login', async (c) => {
