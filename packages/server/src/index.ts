@@ -72,7 +72,7 @@ const fetch = throttle(async (data) => {
 	const response = await got
 		.get(address, { throwHttpErrors: false })
 		.json()
-		.catch((err) => log.info(err));
+		.catch((err) => log.error(err));
 
 	cache.set(builder, response);
 }, 10 * 1000);
@@ -81,7 +81,7 @@ const startServer = async () => {
 	const data = await got
 		.get(urls.list)
 		.json()
-		.catch((err) => log.info(err));
+		.catch((err) => log.error(err));
 	const items = Object.keys(data.items);
 
 	items.forEach((key) => cache.set(key, JSON.parse(data.items[key])));
@@ -122,7 +122,7 @@ app.post('/auth/login', async (c) => {
 	const response = await got
 		.post(urls.login, config(body))
 		.json()
-		.catch((err) => log.info(err));
+		.catch((err) => log.error(err));
 
 	response.error != null && c.status(401);
 	return c.json(response);
@@ -140,7 +140,7 @@ app.post('/api/user/refresh', async (c) => {
 			},
 		})
 		.json()
-		.catch((err) => log.info(err));
+		.catch((err) => log.error(err));
 
 	response.error != null && c.status(401);
 	return c.json(response);
@@ -160,7 +160,7 @@ app.post('/api/user/create', async (c) => {
 	const response = await got
 		.post(urls.create, config(body))
 		.json()
-		.catch((err) => log.info(err));
+		.catch((err) => log.error(err));
 
 	response.created == false && c.status(400);
 	return c.json(response);
