@@ -7,7 +7,9 @@ use actix_web::{middleware, web, App, HttpResponse, HttpServer};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use sled::Db;
+use std::collections::HashMap;
 use std::env;
+use std::str::from_utf8;
 use std::sync::{Arc, Mutex};
 
 use tracing_actix_web::TracingLogger;
@@ -63,6 +65,19 @@ async fn req_index(m_state: web::Data<Arc<Mutex<ServerState>>>) -> HttpResponse 
         "version": env!("CARGO_PKG_VERSION"),
         "database": state.name
     }))
+}
+
+#[get("/list")]
+async fn req_list(m_state: web::Data<Arc<Mutex<ServerState>>>) -> HttpResponse {
+    let mut store: HashMap<String, String> = HashMap::new();
+    let state = m_state.lock().unwrap();
+
+    for result in state.db.iter() {
+        let (key, value) = result.clone().unwrap();
+        store.insert(String::from(from_utf8(&key).unwrap()), String::from(from_utf8(&value).unwrap()));
+    }
+
+    ok_json(json!({ "items": store }))
 }
 
 async fn req_delete(m_state: web::Data<Arc<Mutex<ServerState>>>, path: web::Path<(String, String)>) -> HttpResponse {
@@ -146,6 +161,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::DefaultHeaders::new().add(("Server", server_hdr.to_string())))
             .wrap(TracingLogger::default())
             .service(req_index)
+            .service(req_list)
             .service(
                 web::resource("/{db}/{key}")
                     .route(web::get().to(req_get))

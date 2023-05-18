@@ -1,0 +1,12 @@
+[tasks]
+database = { path = "bin/services", script = "./database --port 3000 --address localhost --database db" }
+server = { path = "bin/services", script = "node server.js --port 6000 --auth 127.0.0.1:5000 --db_url localhost:3000 --database db --secret 2iuhygw3efdrtgyuewi2okedmf" }
+auth = { path = "bin/services", script = "./auth start --address localhost:5000 --cors localhost:6000 --db_name users.db --secret 2iuhygw3efdrtgyuewi2okedmf" }
+clean_services = { path = "bin", script = ["rm -rf services", "mkdir services"] }
+
+# manage this from one config file
+
+# database = 5001
+# auth = 5002
+
+# server = 80 (static render frontend)
