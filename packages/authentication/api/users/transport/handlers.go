@@ -3,7 +3,6 @@ package transport
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 
 	jwt "flagpole_auth/api/auth"
@@ -11,8 +10,11 @@ import (
 	"flagpole_auth/api/users/models"
 	"github.com/Edmartt/go-password-hasher/hasher"
 	"github.com/bitly/go-simplejson"
+	"github.com/gildas/go-logger"
 	"github.com/google/uuid"
 )
+
+var log = logger.Create("authentication", &logger.StdoutStream{Unbuffered: true})
 
 type Handlers struct {
 	user        *models.User
@@ -30,7 +32,7 @@ func (h *Handlers) Login(w http.ResponseWriter, request *http.Request) {
 	json_body := simplejson.New()
 
 	if requestError != nil {
-		log.Println(requestError.Error())
+		log.Errorf(requestError.Error())
 	}
 
 	json.Unmarshal(reqBody, &h.user)
@@ -74,7 +76,7 @@ func (h *Handlers) Refresh(w http.ResponseWriter, request *http.Request) {
 	json_body := simplejson.New()
 
 	if requestError != nil {
-		log.Println(requestError.Error())
+		log.Errorf(requestError.Error())
 	}
 
 	json.Unmarshal(reqBody, &h.user)

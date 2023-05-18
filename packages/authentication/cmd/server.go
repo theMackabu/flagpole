@@ -1,10 +1,11 @@
 package cmd
 
 import (
-	"os"
 	"flagpole_auth/api"
 	"flagpole_auth/api/database"
+	"github.com/gildas/go-logger"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 var startServer = &cobra.Command{
@@ -16,16 +17,17 @@ var startServer = &cobra.Command{
 		secret, _ := cmd.Flags().GetString("secret")
 		address, _ := cmd.Flags().GetString("address")
 		db_name, _ := cmd.Flags().GetString("db_name")
+		log := logger.Create("authentication", &logger.StdoutStream{Unbuffered: true})
 
 		os.Setenv("DB_NAME", db_name)
 		os.Setenv("SECRET_KEY", secret)
 
 		db := database.Migrations{DB: database.SQLite{}}
-		db.MakeMigrations()
+		db.MakeMigrations(log)
 
 		server := api.HttpServer{}
 		server.CreateRouter()
-		server.StartServer(address, cors)
+		server.StartServer(address, cors, log)
 
 	},
 }

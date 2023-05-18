@@ -1,6 +1,6 @@
 const log = {
-	info: (object: any) => console.log(JSON.stringify({ level: 'info', name: 'server', time: new Date(), message: object })),
-	error: (object: any) => console.error(JSON.stringify({ level: 'error', name: 'server', time: new Date(), message: object })),
+	info: (object: any) => console.log(JSON.stringify({ level: 30, name: 'server', time: new Date(), message: object })),
+	error: (object: any) => console.error(JSON.stringify({ level: 50, name: 'server', time: new Date(), message: object })),
 	server: (method: string, path: string, status?: number, elapsed?: string) => {
 		console.log(JSON.stringify({ level: 'info', name: 'server', time: new Date(), method, path: getPathFromURL(path), status, elapsed }));
 	},

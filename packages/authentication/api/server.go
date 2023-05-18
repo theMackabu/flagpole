@@ -1,14 +1,13 @@
 package api
 
 import (
-	"log"
 	"net/http"
 	"strings"
 
 	"flagpole_auth/api/users/transport"
+	"github.com/gildas/go-logger"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
-	"github.com/gildas/go-logger"
 )
 
 type HttpServer struct {
@@ -21,16 +20,14 @@ func (server *HttpServer) CreateRouter() {
 	server.SetRoutes()
 }
 
-func (server *HttpServer) StartServer(address string, origins string) {
-	log.Println("server started:", address)
-	json := logger.Create("authentication")
-
+func (server *HttpServer) StartServer(address string, origins string, log *logger.Logger) {
 	c := cors.New(cors.Options{
 		AllowedOrigins:   strings.Split(origins, ","),
 		AllowCredentials: true,
 	})
 
-	log.Fatal(http.ListenAndServe(address, c.Handler(json.HttpHandler()(transport.Logger(server.Router)))))
+	log.Record("address", address).Infof("server started")
+	log.Record("server", http.ListenAndServe(address, c.Handler(log.HttpHandler()(transport.Logger(server.Router))))).Fatalf("Failed to start server...")
 }
 
 func (server *HttpServer) SetRoutes() {

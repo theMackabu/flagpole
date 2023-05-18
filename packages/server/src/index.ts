@@ -68,10 +68,10 @@ const startServer = async () => {
 		.get(urls.list, agent)
 		.json()
 		.catch((err) => log.error(err));
-	const items = Object.keys(data.items);
+	const items = Object.entries(data.items);
 
-	items.forEach((key) => cache.set(key, JSON.parse(data.items[key])));
-	log.info(`fetched inital cache, ${items.length >= 1 ? items.length + ' item' : items.length + ' items'}`);
+	items.forEach(([key, value]) => cache.set(key, JSON.parse(value)));
+	log.info(`fetched inital cache, ${items.length <= 1 ? items.length + ' item' : items.length + ' items'}`);
 	log.info(`started on port ${args.port}`);
 
 	serve({

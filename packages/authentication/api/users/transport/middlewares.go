@@ -6,13 +6,12 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 
 	jwt "flagpole_auth/api/auth"
-	"github.com/bitly/go-simplejson"
 	"flagpole_auth/api/users/models"
+	"github.com/bitly/go-simplejson"
 	"github.com/gildas/go-logger"
 )
 
@@ -31,11 +30,10 @@ func ValidateRequestBody(handler http.HandlerFunc) http.HandlerFunc {
 		user := models.User{}
 
 		if rError != nil {
-			log.Println(rError.Error())
+			log.Errorf(rError.Error())
 		}
 
 		json.Unmarshal(rBody, &user)
-
 		r.Body = ioutil.NopCloser(bytes.NewBuffer(rBody))
 
 		if len(user.Username) < 5 {
@@ -61,7 +59,7 @@ func IsAuthorized(handler http.HandlerFunc) http.HandlerFunc {
 
 		if sentToken == "" {
 			data.Set("missing_headers", "Authorization")
-			
+
 			w.WriteHeader(http.StatusUnauthorized)
 			json.NewEncoder(w).Encode(data)
 			return
@@ -93,8 +91,8 @@ func IsAuthorized(handler http.HandlerFunc) http.HandlerFunc {
 }
 
 func Logger(next http.Handler) http.Handler {
-	 return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger.Must(logger.FromContext(r.Context()))
 		next.ServeHTTP(w, r)
-	 })
+	})
 }

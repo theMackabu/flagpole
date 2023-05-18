@@ -2,18 +2,19 @@ package database
 
 import (
 	"flagpole_auth/api/users/models"
-	"log"
+	"github.com/gildas/go-logger"
 )
 
-type Migrations struct{
+type Migrations struct {
 	DB IConnection
 }
 
-func (migr Migrations) MakeMigrations() {
-	connection, conError:= migr.DB.GetConnection()
-	if conError != nil{
-		log.Println("connection error")
+func (migr Migrations) MakeMigrations(log *logger.Logger) {
+	connection, conError := migr.DB.GetConnection()
+	if conError != nil {
+		log.Fatalf("connection error")
 	}
-	log.Println("connected to database")
-	connection.AutoMigrate(&models.User{})
+
+	log.Infof("connected to database")
+	log.Record("migration", connection.AutoMigrate(&models.User{})).Infof("finished migration")
 }
