@@ -1,4 +1,4 @@
-export default throttle = (callback, delay) => {
+const throttle = (callback, delay) => {
 	let throttleTimeout = null;
 	let storedEvent = null;
 
@@ -21,3 +21,5 @@ export default throttle = (callback, delay) => {
 
 	return throttledEventHandler;
 };
+
+export default throttle;

@@ -10,7 +10,7 @@ api.notFound((c) => c.json(notFound, 404));
 
 api.post('/auth/login', async (c) => {
 	const body = await c.req.json();
-	const response = await got
+	const response: any = await got
 		.post(urls.login, config(body))
 		.json()
 		.catch((err) => log.error(err));
@@ -23,7 +23,7 @@ api.post('/api/user/refresh', async (c) => {
 	const body = await c.req.json();
 	const token = c.req.header('Authorization');
 
-	const response = await got
+	const response: any = await got
 		.post(urls.refresh, {
 			...config(body),
 			headers: {
@@ -40,7 +40,7 @@ api.post('/api/user/refresh', async (c) => {
 api.get('/client/api/flag/:id', async (c) => {
 	const key = c.req.query('key');
 	const id = c.req.param('id');
-	const response = cacheHandler(id, key);
+	const response: any = cacheHandler(id, key);
 
 	response != null && response.error != null && c.status(404);
 	return response != null ? c.json(response) : c.json(notFound, 404);
@@ -48,7 +48,7 @@ api.get('/client/api/flag/:id', async (c) => {
 
 api.post('/api/user/create', async (c) => {
 	const body = await c.req.json();
-	const response = await got
+	const response: any = await got
 		.post(urls.create, config(body))
 		.json()
 		.catch((err) => log.error(err));

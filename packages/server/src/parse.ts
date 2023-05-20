@@ -42,7 +42,7 @@ const parseArgs = (args: string[], opts?: Options): ParsedArgs => {
 	if (typeof opts.boolean === 'boolean' && opts.boolean) {
 		flags.allBools = true;
 	} else {
-		([] as string[])
+		([] as any[])
 			.concat(opts.boolean)
 			.filter(Boolean)
 			.forEach(function (key) {
@@ -133,7 +133,7 @@ const parseArgs = (args: string[], opts?: Options): ParsedArgs => {
 		}
 	}
 
-	function setArg(key: string, val: any, arg: string) {
+	function setArg(key: string, val: any, arg: string = null) {
 		if (arg && flags.unknownFn && !argDefined(key, arg)) {
 			if (flags.unknownFn(arg) === false) {
 				return;
@@ -148,11 +148,10 @@ const parseArgs = (args: string[], opts?: Options): ParsedArgs => {
 		});
 	}
 
-	// Set booleans to false by default.
 	Object.keys(flags.bools).forEach(function (key) {
 		setArg(key, false);
 	});
-	// Set booleans to user defined default if supplied.
+
 	Object.keys(defaults)
 		.filter(isBooleanKey)
 		.forEach(function (key) {
@@ -173,7 +172,7 @@ const parseArgs = (args: string[], opts?: Options): ParsedArgs => {
 		if (/^--.+=/.test(arg)) {
 			const m = arg.match(/^--([^=]+)=([\s\S]*)$/);
 			key = m![1];
-			let value = m![2];
+			let value: any = m![2];
 			if (isBooleanKey(key)) {
 				value = value !== 'false';
 			}

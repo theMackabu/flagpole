@@ -1,7 +1,7 @@
 import bunyan from 'bunyan';
 
 const log = bunyan.createLogger({ name: 'server' });
-const time = (start: number) => (delta = Date.now() - start);
+const time = (start: number) => Date.now() - start;
 
 const getPathFromURL = (url: string, strict: boolean = true): string => {
 	const queryIndex = url.indexOf('?', 8);

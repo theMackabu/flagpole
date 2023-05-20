@@ -5,13 +5,13 @@ import { serve } from '@hono/node-server';
 import { urls, agent, args } from '../api/objects';
 
 const startServer = async (app) => {
-	const data = await got
+	const data: any = await got
 		.get(urls.list, agent)
 		.json()
 		.catch((err) => log.error(err));
 	const items = Object.entries(data.items);
 
-	items.forEach(([key, value]) => cache.set(key, JSON.parse(value)));
+	items.forEach(([key, value]: any) => cache.set(key, JSON.parse(value)));
 	log.info({ items: items.length }, 'fetched inital cache');
 	log.info({ port: args.port }, 'server started');
 

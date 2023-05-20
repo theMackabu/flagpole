@@ -1,7 +1,7 @@
 interface Flags {
 	bools: { [key: string]: boolean };
 	strings: { [key: string]: boolean };
-	unknownFn: (() => void) | null;
+	unknownFn: ((arg: any) => void | boolean) | null;
 	allBools?: boolean;
 }
 
