@@ -24,10 +24,18 @@ const agent = {
 	},
 };
 
-const config = (body) => ({
-	json: body,
-	throwHttpErrors: false,
-	...agent,
-});
+const config = (body, plain) => {
+	return plain
+		? {
+				body: body,
+				throwHttpErrors: false,
+				...agent,
+		  }
+		: {
+				json: body,
+				throwHttpErrors: false,
+				...agent,
+		  };
+};
 
 export { notFound, urls, agent, config, args };

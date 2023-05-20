@@ -1,8 +1,9 @@
 import got from 'got';
 import { Hono } from 'hono';
 import { log } from '../logger';
+import { pathBuilder } from '../helpers';
 import { cacheHandler } from './database';
-import { notFound, urls, config } from './objects';
+import { notFound, urls, config, args } from './objects';
 
 const api = new Hono();
 
@@ -54,6 +55,19 @@ api.post('/api/user/create', async (c) => {
 		.catch((err) => log.error(err));
 
 	response.created == false && c.status(400);
+	return c.json(response);
+});
+
+api.post('/api/flag/create', async (c) => {
+	const { environment, flag, body } = await c.req.json();
+	const builder = pathBuilder(urls.database, `${environment}.flags.${flag}`);
+
+	const response: any = await got
+		.put(builder, config(body, true))
+		.json()
+		.catch((err) => log.error(err));
+
+	response.success == false && c.status(400);
 	return c.json(response);
 });
 

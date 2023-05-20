@@ -22,7 +22,7 @@ const logger = () => {
 		const start = Date.now();
 		await next();
 
-		log.info({ method, path: getPathFromURL(c.req.url), status: c.res.status, time: time(start) }, '[HTTP REQUEST - END]');
+		log.info({ method, status: c.res.status, route: getPathFromURL(c.req.url), duration: time(start) }, '[HTTP REQUEST - END]');
 	};
 };
 
