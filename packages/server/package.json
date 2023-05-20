@@ -1,27 +1,27 @@
 {
-	"name": "flagpole_server",
-	"version": "0.1.0",
-	"license": "GPL-3.0",
-	"scripts": {
-		"dev": "tsx src/app.ts --port 7000 --auth 127.0.0.1:5000 --db_url localhost:3000 --database db --secret 2iuhygw3efdrtgyuewi2okedmf",
-		"lint": "tsc --noEmit",
-		"clean": "rm -rf build/*",
-		"start": "node build/app.dist.js --port 7000 --auth 127.0.0.1:5000 --db_url localhost:3000 --database db --secret 2iuhygw3efdrtgyuewi2okedmf",
-		"ci": "yarn clean && esbuild $(esbuild-config)",
-		"watch": "nodemon --watch 'src/**/*.ts' --exec 'tsx' src/app.ts --port 7000 --auth 127.0.0.1:5000 --db_url localhost:3000 --database db --secret 2iuhygw3efdrtgyuewi2okedmf",
-		"build": "yarn clean && yarn lint && esbuild $(esbuild-config)"
-	},
-	"dependencies": {
-		"@hono/node-server": "^0.4.0",
-		"@types/bunyan": "^1.8.8",
-		"bunyan": "^1.8.15",
-		"got": "^12.6.0",
-		"hono": "^3.1.8",
-		"nanoid": "^4.0.2"
-	},
-	"devDependencies": {
-		"esbuild-config": "^1.0.1",
-		"tsx": "^3.12.2",
-		"typescript": "^5.0.4"
-	}
+  "name": "flagpole_server",
+  "version": "0.1.0",
+  "license": "GPL-3.0",
+  "scripts": {
+    "dev": "tsx src/app.ts --port 7000 --auth 127.0.0.1:5000 --db_url localhost:3000 --database db --secret 2iuhygw3efdrtgyuewi2okedmf",
+    "lint": "tsc --noEmit",
+    "clean": "rm -rf build/*",
+    "start": "node build/app.dist.js --port 7000 --auth 127.0.0.1:5000 --db_url localhost:3000 --database db --secret 2iuhygw3efdrtgyuewi2okedmf",
+    "ci": "yarn clean && esbuild $(esbuild-config)",
+    "watch": "nodemon --watch 'src/**/*.ts' --exec 'tsx' src/app.ts --port 7000 --auth 127.0.0.1:5000 --db_url localhost:3000 --database db --secret 2iuhygw3efdrtgyuewi2okedmf",
+    "build": "yarn clean && yarn lint && esbuild $(esbuild-config)"
+  },
+  "dependencies": {
+    "@hono/node-server": "^0.4.0",
+    "@types/bunyan": "^1.8.8",
+    "bunyan": "^1.8.15",
+    "got": "^12.6.0",
+    "hono": "^3.1.8",
+    "nanoid": "^4.0.2"
+  },
+  "devDependencies": {
+    "esbuild-config": "^1.0.1",
+    "tsx": "^3.12.2",
+    "typescript": "^5.0.4"
+  }
 }

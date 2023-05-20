@@ -4,6 +4,7 @@ use inquire::{required, Text};
 use macros_rs::{crashln, str};
 use regex::Regex;
 use serde::Deserialize;
+use serde_json::{from_str, to_string_pretty, Value};
 use std::io::prelude::*;
 use std::process::Command;
 use std::str::from_utf8;
@@ -11,14 +12,16 @@ use std::{fs, fs::File};
 use toml_edit::{value, Document};
 
 const MAIDFILE: &str = "Maidfile.toml";
-const VERSION_TOML: &str = "packages/versioning/Cargo.toml";
-const DATABASE_TOML: &str = "packages/database/Cargo.toml";
-const GOLANG_CONST: &str = "packages/authentication/config/version.go";
+const VERSION_PKG: &str = "packages/versioning/Cargo.toml";
+const DATABASE_PKG: &str = "packages/database/Cargo.toml";
+const AUTHENTICATION_PKG: &str = "packages/authentication/config/version.go";
+const SERVER_PKG: &str = "packages/server/package.json";
 
 struct Files {
     maidfile: String,
-    version_system: String,
+    versioning: String,
     database: String,
+    authentication: String,
     server: String,
 }
 
@@ -46,15 +49,19 @@ fn read() -> Files {
             Ok(file) => file,
             Err(err) => crashln!("{err}"),
         },
-        version_system: match fs::read_to_string(VERSION_TOML) {
+        versioning: match fs::read_to_string(VERSION_PKG) {
             Ok(file) => file,
             Err(err) => crashln!("{err}"),
         },
-        database: match fs::read_to_string(DATABASE_TOML) {
+        database: match fs::read_to_string(DATABASE_PKG) {
             Ok(file) => file,
             Err(err) => crashln!("{err}"),
         },
-        server: match fs::read_to_string(GOLANG_CONST) {
+        authentication: match fs::read_to_string(AUTHENTICATION_PKG) {
+            Ok(file) => file,
+            Err(err) => crashln!("{err}"),
+        },
+        server: match fs::read_to_string(SERVER_PKG) {
             Ok(file) => file,
             Err(err) => crashln!("{err}"),
         },
@@ -79,31 +86,38 @@ fn set(version: String) {
     println!("\n{} {} {}", "Updated versions to".white(), format!("v{version}").bright_green(), "in:".white());
 
     let regex = Regex::new(r#"const version = "([0-9]{1,4}(\.[0-9a-z]{1,6}){1,5})""#).unwrap();
-    let server = regex.replace_all(str!(read().server.clone()), format!("const version = \"{}\"", version));
+    let authentication = regex.replace_all(str!(read().authentication.clone()), format!("const version = \"{}\"", version));
 
-    let mut maidfile = match read().maidfile.parse::<Document>() {
+    let mut maidfile: Document = match read().maidfile.parse() {
         Ok(doc) => doc,
         Err(err) => crashln!("{err}"),
     };
 
-    let mut version_system = match read().version_system.parse::<Document>() {
+    let mut versioning: Document = match read().versioning.parse() {
         Ok(doc) => doc,
         Err(err) => crashln!("{err}"),
     };
 
-    let mut database = match read().database.parse::<Document>() {
+    let mut database: Document = match read().database.parse() {
+        Ok(doc) => doc,
+        Err(err) => crashln!("{err}"),
+    };
+
+    let mut server: Value = match from_str(&read().server) {
         Ok(doc) => doc,
         Err(err) => crashln!("{err}"),
     };
 
     maidfile["project"]["version"] = value(version.clone());
-    version_system["package"]["version"] = value(version.clone());
+    versioning["package"]["version"] = value(version.clone());
     database["package"]["version"] = value(version.clone());
+    server["version"] = Value::String(version.clone());
 
     write(MAIDFILE, maidfile.to_string());
-    write(VERSION_TOML, version_system.to_string());
-    write(DATABASE_TOML, database.to_string());
-    write(GOLANG_CONST, server.to_string());
+    write(VERSION_PKG, versioning.to_string());
+    write(DATABASE_PKG, database.to_string());
+    write(AUTHENTICATION_PKG, authentication.to_string());
+    write(SERVER_PKG, to_string_pretty(&server).unwrap());
 }
 
 fn main() {
