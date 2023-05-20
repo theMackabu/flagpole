@@ -44,7 +44,7 @@ api.get('/client/api/flag/:id', async (c) => {
 	const response: any = cacheHandler(id, key);
 
 	response != null && response.error != null && c.status(404);
-	return response != null ? c.json(response) : c.json(notFound, 404);
+	return response != null ? c.text(response) : c.json(notFound, 404);
 });
 
 api.post('/api/user/create', async (c) => {

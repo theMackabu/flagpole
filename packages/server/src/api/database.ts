@@ -10,7 +10,7 @@ const fetch = throttle(async (data) => {
 	const { address, builder } = data;
 	const response = await got
 		.get(address, { ...agent, throwHttpErrors: false })
-		.json()
+		.text()
 		.catch((err) => log.error(err));
 
 	cache.set(builder, response);
