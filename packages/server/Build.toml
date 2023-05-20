@@ -2,4 +2,4 @@
 path = "packages/server"
 info = "build & run server"
 cache = { path = "packages/server", target = "bin/services/server.js" }
-script = ["yarn ci", "mv build/index.dist.js %{dir.current}/bin/services/server.js", "yarn clean"]
+script = ["yarn ci", "mv build/app.dist.js %{dir.current}/bin/services/server.js", "yarn clean"]

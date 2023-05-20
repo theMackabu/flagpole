@@ -4,6 +4,6 @@
 	"platform": "node",
 	"minify": true,
 	"bundle": true,
-	"entry": "src/index.ts",
-	"outfile": "build/index.dist.js"
+	"entry": "src/app.ts",
+	"outfile": "build/app.dist.js"
 }
