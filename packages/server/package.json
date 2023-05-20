@@ -3,12 +3,12 @@
 	"version": "0.1.0",
 	"license": "GPL-3.0",
 	"scripts": {
-		"dev": "tsx src/index.ts",
+		"dev": "tsx src/index.ts --port 6000 --auth 127.0.0.1:5000 --db_url localhost:3000 --database db --secret 2iuhygw3efdrtgyuewi2okedmf",
 		"lint": "tsc --noEmit",
 		"clean": "rm -rf build/*",
-		"start": "node build/index.dist.js",
+		"start": "node build/index.dist.js --port 6000 --auth 127.0.0.1:5000 --db_url localhost:3000 --database db --secret 2iuhygw3efdrtgyuewi2okedmf",
 		"ci": "yarn clean && esbuild $(esbuild-config)",
-		"watch": "nodemon --watch 'src/**/*.ts' --exec 'tsx' src/index.ts",
+		"watch": "nodemon --watch 'src/**/*.ts' --exec 'tsx' src/index.ts --port 6000 --auth 127.0.0.1:5000 --db_url localhost:3000 --database db --secret 2iuhygw3efdrtgyuewi2okedmf",
 		"build": "yarn clean && yarn lint && esbuild $(esbuild-config)"
 	},
 	"dependencies": {

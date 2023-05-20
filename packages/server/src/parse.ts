@@ -1,14 +1,16 @@
-function hasKey(obj, keys) {
-	var o = obj;
+import { Flags, Options, ParsedArgs } from './types';
+
+const hasKey = (obj: any, keys: string[]): boolean => {
+	let o = obj;
 	keys.slice(0, -1).forEach(function (key) {
 		o = o[key] || {};
 	});
 
-	var key = keys[keys.length - 1];
+	const key = keys[keys.length - 1];
 	return key in o;
-}
+};
 
-function isNumber(x) {
+const isNumber = (x: any): boolean => {
 	if (typeof x === 'number') {
 		return true;
 	}
@@ -16,18 +18,18 @@ function isNumber(x) {
 		return true;
 	}
 	return /^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(e[-+]?\d+)?$/.test(x);
-}
+};
 
-function isConstructorOrProto(obj, key) {
+const isConstructorOrProto = (obj: any, key: string): boolean => {
 	return (key === 'constructor' && typeof obj[key] === 'function') || key === '__proto__';
-}
+};
 
-const parse = (args, opts) => {
+const parseArgs = (args: string[], opts?: Options): ParsedArgs => {
 	if (!opts) {
 		opts = {};
 	}
 
-	var flags = {
+	const flags: Flags = {
 		bools: {},
 		strings: {},
 		unknownFn: null,
@@ -40,7 +42,7 @@ const parse = (args, opts) => {
 	if (typeof opts.boolean === 'boolean' && opts.boolean) {
 		flags.allBools = true;
 	} else {
-		[]
+		([] as string[])
 			.concat(opts.boolean)
 			.filter(Boolean)
 			.forEach(function (key) {
@@ -48,9 +50,9 @@ const parse = (args, opts) => {
 			});
 	}
 
-	var aliases = {};
+	const aliases: { [key: string]: string[] } = {};
 
-	function isBooleanKey(key) {
+	function isBooleanKey(key: string) {
 		if (flags.bools[key]) {
 			return true;
 		}
@@ -63,7 +65,7 @@ const parse = (args, opts) => {
 	}
 
 	Object.keys(opts.alias || {}).forEach(function (key) {
-		aliases[key] = [].concat(opts.alias[key]);
+		aliases[key] = ([] as string[]).concat(opts.alias[key]);
 		aliases[key].forEach(function (x) {
 			aliases[x] = [key].concat(
 				aliases[key].filter(function (y) {
@@ -73,30 +75,30 @@ const parse = (args, opts) => {
 		});
 	});
 
-	[]
+	([] as string[])
 		.concat(opts.string)
 		.filter(Boolean)
 		.forEach(function (key) {
 			flags.strings[key] = true;
 			if (aliases[key]) {
-				[].concat(aliases[key]).forEach(function (k) {
+				([] as string[]).concat(aliases[key]).forEach(function (k) {
 					flags.strings[k] = true;
 				});
 			}
 		});
 
-	var defaults = opts.default || {};
+	const defaults = opts.default || {};
 
-	var argv = { _: [] };
+	const argv: ParsedArgs = { _: [] };
 
-	function argDefined(key, arg) {
+	function argDefined(key: string, arg: string) {
 		return (flags.allBools && /^--[^=]+$/.test(arg)) || flags.strings[key] || flags.bools[key] || aliases[key];
 	}
 
-	function setKey(obj, keys, value) {
-		var o = obj;
-		for (var i = 0; i < keys.length - 1; i++) {
-			var key = keys[i];
+	function setKey(obj: any, keys: string[], value: any) {
+		let o = obj;
+		for (let i = 0; i < keys.length - 1; i++) {
+			const key = keys[i];
 			if (isConstructorOrProto(o, key)) {
 				return;
 			}
@@ -112,7 +114,7 @@ const parse = (args, opts) => {
 			o = o[key];
 		}
 
-		var lastKey = keys[keys.length - 1];
+		const lastKey = keys[keys.length - 1];
 		if (isConstructorOrProto(o, lastKey)) {
 			return;
 		}
@@ -131,14 +133,14 @@ const parse = (args, opts) => {
 		}
 	}
 
-	function setArg(key, val, arg) {
+	function setArg(key: string, val: any, arg: string) {
 		if (arg && flags.unknownFn && !argDefined(key, arg)) {
 			if (flags.unknownFn(arg) === false) {
 				return;
 			}
 		}
 
-		var value = !flags.strings[key] && isNumber(val) ? Number(val) : val;
+		const value = !flags.strings[key] && isNumber(val) ? Number(val) : val;
 		setKey(argv, key.split('.'), value);
 
 		(aliases[key] || []).forEach(function (x) {
@@ -156,49 +158,46 @@ const parse = (args, opts) => {
 		.forEach(function (key) {
 			setArg(key, defaults[key]);
 		});
-	var notFlags = [];
+	let notFlags: string[] = [];
 
 	if (args.indexOf('--') !== -1) {
 		notFlags = args.slice(args.indexOf('--') + 1);
 		args = args.slice(0, args.indexOf('--'));
 	}
 
-	for (var i = 0; i < args.length; i++) {
-		var arg = args[i];
-		var key;
-		var next;
+	for (let i = 0; i < args.length; i++) {
+		const arg = args[i];
+		let key: string;
+		let next: string | undefined;
 
 		if (/^--.+=/.test(arg)) {
-			// Using [\s\S] instead of . because js doesn't support the
-			// 'dotall' regex modifier. See:
-			// http://stackoverflow.com/a/1068308/13216
-			var m = arg.match(/^--([^=]+)=([\s\S]*)$/);
-			key = m[1];
-			var value = m[2];
+			const m = arg.match(/^--([^=]+)=([\s\S]*)$/);
+			key = m![1];
+			let value = m![2];
 			if (isBooleanKey(key)) {
 				value = value !== 'false';
 			}
 			setArg(key, value, arg);
 		} else if (/^--no-.+/.test(arg)) {
-			key = arg.match(/^--no-(.+)/)[1];
+			key = arg.match(/^--no-(.+)/)![1];
 			setArg(key, false, arg);
 		} else if (/^--.+/.test(arg)) {
-			key = arg.match(/^--(.+)/)[1];
+			key = arg.match(/^--(.+)/)![1];
 			next = args[i + 1];
 			if (next !== undefined && !/^(-|--)[^-]/.test(next) && !isBooleanKey(key) && !flags.allBools) {
 				setArg(key, next, arg);
 				i += 1;
-			} else if (/^(true|false)$/.test(next)) {
+			} else if (/^(true|false)$/.test(next!)) {
 				setArg(key, next === 'true', arg);
 				i += 1;
 			} else {
 				setArg(key, flags.strings[key] ? '' : true, arg);
 			}
 		} else if (/^-[^-]+/.test(arg)) {
-			var letters = arg.slice(1, -1).split('');
+			const letters = arg.slice(1, -1).split('');
 
-			var broken = false;
-			for (var j = 0; j < letters.length; j++) {
+			let broken = false;
+			for (let j = 0; j < letters.length; j++) {
 				next = arg.slice(j + 2);
 
 				if (next === '-') {
@@ -244,7 +243,7 @@ const parse = (args, opts) => {
 				argv._.push(flags.strings._ || !isNumber(arg) ? arg : Number(arg));
 			}
 			if (opts.stopEarly) {
-				argv._.push.apply(argv._, args.slice(i + 1));
+				argv._.push(...args.slice(i + 1));
 				break;
 			}
 		}
@@ -271,4 +270,4 @@ const parse = (args, opts) => {
 	return argv;
 };
 
-export { parse };
+export { parseArgs };
