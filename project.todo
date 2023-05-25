@@ -1,0 +1,24 @@
+(F) render @frontend by +server
+
+(B) @60:fatal, @50:error, @40:warn, @30 info
+
+(C) +manager is cli @cli
+
+(I) 
+   +orchestrator will run all the programs
+   and check if they are running well (health check)
+
+x (B) cache the flags +server side, access @db every 2 minutes
+
+(B) make +manager able to deploy all services via @docker (maybe), starting with the +orchestrator
+
+(C)
+   @cli
+   - create user
+   - setup
+
+(C)
+   @config
+   - use toml
+   - port/host
+   - +database path

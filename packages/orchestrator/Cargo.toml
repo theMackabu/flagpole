@@ -1,4 +1,4 @@
-# run all the microservices together with fancy ui, ran by the manager
+# TODO: run all the microservices together with fancy ui, ran by the manager
 
 [package]
 name = "flagpole_orchestrator"
