@@ -1,4 +1,4 @@
-module flagpole_auth
+module flagpole/auth
 
 go 1.19
 

@@ -5,9 +5,9 @@ import (
 	"io"
 	"net/http"
 
-	jwt "flagpole/packages/authentication/api/auth"
-	"flagpole/packages/authentication/api/users/data"
-	"flagpole/packages/authentication/api/users/models"
+	jwt "flagpole/auth/api/auth"
+	"flagpole/auth/api/users/data"
+	"flagpole/auth/api/users/models"
 	"github.com/Edmartt/go-password-hasher/hasher"
 	"github.com/bitly/go-simplejson"
 	"github.com/gildas/go-logger"

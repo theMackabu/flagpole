@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"strings"
 
-	jwt "flagpole/packages/authentication/api/auth"
-	"flagpole/packages/authentication/api/users/models"
+	jwt "flagpole/auth/api/auth"
+	"flagpole/auth/api/users/models"
 	"github.com/bitly/go-simplejson"
 	"github.com/gildas/go-logger"
 )

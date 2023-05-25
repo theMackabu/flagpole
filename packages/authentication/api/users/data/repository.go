@@ -1,8 +1,8 @@
 package data
 
 import (
-	"flagpole/packages/authentication/api/database"
-	"flagpole/packages/authentication/api/users/models"
+	"flagpole/auth/api/database"
+	"flagpole/auth/api/users/models"
 	"github.com/gildas/go-logger"
 )
 

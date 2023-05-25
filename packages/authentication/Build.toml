@@ -2,4 +2,4 @@
 path = "packages/authentication"
 info = "build server binary"
 cache = { path = "packages/authentication", target = "bin/services/auth" }
-script = ["go mod tidy" ,"go build .", "mv flagpole_auth %{dir.current}/bin/services/auth", "echo built auth (main.go)"]
+script = ["go mod tidy" ,"go build .", "mv auth %{dir.current}/bin/services/auth", "echo built auth (main.go)"]

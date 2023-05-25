@@ -1,10 +1,9 @@
 package main
 
 import (
-   "flagpole/packages/authentication/cmd"
+	"flagpole/auth/cmd"
 )
 
-
 func main() {
-   cmd.Execute()
+	cmd.Execute()
 }

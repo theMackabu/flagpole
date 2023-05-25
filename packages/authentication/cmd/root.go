@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/signal"
 
-	"flagpole/packages/authentication/config"
+	"flagpole/auth/config"
 	"github.com/spf13/cobra"
 )
 
