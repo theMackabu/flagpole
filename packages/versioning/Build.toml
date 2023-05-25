@@ -2,4 +2,4 @@
 path = "packages/versioning"
 info = "build versioning binary"
 cache = { path = "packages/versioning", target = "version_system" }
-script = ["cargo build --release", "mv target/release/version_system %{dir.current}/version_system"]
+script = ["cargo build --release", "maid move ../../ version_system %{dir.current}/version_system -q"]

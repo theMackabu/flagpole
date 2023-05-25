@@ -48,13 +48,9 @@ fn err_500() -> HttpResponse {
     )
 }
 
-fn ok_binary(val: Vec<u8>) -> HttpResponse {
-    HttpResponse::Ok().content_type("application/octet-stream").body(val)
-}
+fn ok_binary(val: Vec<u8>) -> HttpResponse { HttpResponse::Ok().content_type("application/octet-stream").body(val) }
 
-fn ok_json(jval: serde_json::Value) -> HttpResponse {
-    HttpResponse::Ok().content_type("application/json").body(jval.to_string())
-}
+fn ok_json(jval: serde_json::Value) -> HttpResponse { HttpResponse::Ok().content_type("application/json").body(jval.to_string()) }
 
 #[get("/health")]
 async fn req_index(m_state: web::Data<Arc<Mutex<ServerState>>>) -> HttpResponse {

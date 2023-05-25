@@ -2,4 +2,4 @@
 path = "packages/database"
 info = "build database binary"
 cache = { path = "packages/database", target = "bin/services/database" }
-script = ["cargo build --release", "mv target/release/flagpole_db %{dir.current}/bin/services/database"]
+script = ["cargo build --release", "maid move ../../ flagpole_db %{dir.current}/bin/services/database -q"]

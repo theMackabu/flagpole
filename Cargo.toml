@@ -1,0 +1,8 @@
+[workspace]
+
+members = [
+    "packages/manager",
+    "packages/orchestrator",
+    "packages/database",
+    "packages/versioning",
+]
