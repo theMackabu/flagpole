@@ -1,7 +1,7 @@
 package main
 
 import (
-   "flagpole_auth/cmd"
+   "flagpole/packages/authentication/cmd"
 )
 
 

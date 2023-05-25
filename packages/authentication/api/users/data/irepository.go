@@ -1,6 +1,6 @@
 package data
 
-import "flagpole_auth/api/users/models"
+import "flagpole/packages/authentication/api/users/models"
 
 var RepoAccessInterface IUserRepository
 

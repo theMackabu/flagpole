@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"flagpole_auth/api"
-	"flagpole_auth/api/database"
+	"flagpole/packages/authentication/api"
+	"flagpole/packages/authentication/api/database"
 	"github.com/gildas/go-logger"
 	"github.com/spf13/cobra"
 	"os"

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"flagpole_auth/api/users/transport"
+	"flagpole/packages/authentication/api/users/transport"
 	"github.com/gildas/go-logger"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
